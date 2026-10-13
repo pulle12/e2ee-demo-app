@@ -25,3 +25,5 @@ This project simulates secure communication between two clients over a server. M
    python main.py
    ```
 
+## Workflow as a diagram:
+![Sequence diagram](./e2ee-workflow.png)

@@ -1,0 +1,26 @@
+@startuml
+title E2EE Demo Workflow
+
+autonumber
+
+actor User
+participant Receiver
+participant Sender
+participant WebSocket as "WebSocket Server"
+
+User -> Receiver: Start
+Receiver -> Receiver: generate RSA keypair
+Receiver --> Sender: send public key
+
+Sender -> Sender: generate Fernet session key
+Sender -> Sender: encrypt plaintext with Fernet
+Sender -> Sender: encrypt session key with Receiver public key (RSA-OAEP)
+Sender -> WebSocket: send JSON\n{ encrypted_key, encrypted_message }
+
+WebSocket -> Receiver: receive message
+Receiver -> Receiver: decrypt_message()
+Receiver -> Receiver: decrypt session key with RSA private key
+Receiver -> Receiver: decrypt message with Fernet session key
+Receiver --> User: print plaintext message
+
+@enduml
