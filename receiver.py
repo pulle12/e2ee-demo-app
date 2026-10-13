@@ -1,14 +1,15 @@
 import base64
+
 from cryptography.fernet import Fernet
-from cryptography.hazmat.primitives.asymmetric import rsa, padding
 from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import padding, rsa
+
 
 class Receiver:
     def __init__(self):
         # Empfänger generiert sein RSA-Schlüsselpaar (Public & Private Key)
         self.__receiver_private_key = rsa.generate_private_key(
-            public_exponent=65537,
-            key_size=2048
+            public_exponent=65537, key_size=2048
         )
         self.__receiver_public_key = self.__receiver_private_key.public_key()
         print("[+] Empfänger: RSA-Schlüsselpaar generiert.")
@@ -28,12 +29,14 @@ class Receiver:
             padding.OAEP(
                 mgf=padding.MGF1(algorithm=hashes.SHA256()),
                 algorithm=hashes.SHA256(),
-                label=None
-            )
+                label=None,
+            ),
         )
 
         # Empfänger entschlüsselt die Nachricht mit dem entschlüsselten Session-Key
         receiver_cipher_suite = Fernet(decrypted_session_key)
-        decrypted_message = receiver_cipher_suite.decrypt(payload_on_server["encrypted_message"].encode())
+        decrypted_message = receiver_cipher_suite.decrypt(
+            payload_on_server["encrypted_message"].encode()
+        )
 
         print(f"[<] Empfänger Entschlüsselt: '{decrypted_message.decode()}'")

@@ -1,7 +1,9 @@
 import base64
+
 from cryptography.fernet import Fernet
-from cryptography.hazmat.primitives.asymmetric import rsa, padding
 from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import padding
+
 
 class Sender:
     def __init__(self, receiver_public_key):
@@ -19,8 +21,8 @@ class Sender:
             padding.OAEP(
                 mgf=padding.MGF1(algorithm=hashes.SHA256()),
                 algorithm=hashes.SHA256(),
-                label=None
-            )
+                label=None,
+            ),
         )
         print("[+] Sender: Nachricht und Session-Key wurden verschlüsselt.")
 
@@ -28,7 +30,7 @@ class Sender:
         # Der Server sieht nur diese unleserlichen Daten:
         payload_on_server = {
             "encrypted_key": base64.b64encode(encrypted_session_key).decode(),
-            "encrypted_message": encrypted_message.decode()
+            "encrypted_message": encrypted_message.decode(),
         }
         print(f"[Server-Sicht]: {payload_on_server}")
 
